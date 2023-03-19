@@ -21,6 +21,7 @@ public:
 
     void wczytaj();
 
+
     void wyswietl();
     void wyswietl(int rok);
 
