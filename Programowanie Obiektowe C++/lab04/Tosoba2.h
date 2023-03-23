@@ -8,15 +8,16 @@ using namespace std;
 class Tosoba2 {
 private:
     string nazwisko, imie, motto;
-    Tdata dataUr;
+
 public:
+    Tdata dataUr;
     Tosoba2(); // kontruktor domyślny
-    Tosoba2(const string & nazwisko, const string & imie, const Tdata & d); // motto zdefiniowane wewnątrz konstruktora
+    Tosoba2(string nazwisko, string imie, Tdata d); // motto zdefiniowane wewnątrz konstruktora
     void wczytaj();
     void wyswietl();
     string getNazwiskoImie();
-    int roznicaWieku(Tosoba2 & partner); //referencja
-    Tosoba2 dluzszeNazwisko(Tosoba2 & partner); // referencja
+    int roznicaWieku(Tosoba2 &partner); // referencja
+    Tosoba2 dluzszeNazwisko(Tosoba2 &partner); // referencja
 };
 
 

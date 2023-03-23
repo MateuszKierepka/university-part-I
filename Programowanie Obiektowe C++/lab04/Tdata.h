@@ -5,8 +5,9 @@
 class Tdata {
 private:
     int d, m, r;
+
 public:
-    Tdata(); //konstruktor domyślny
+    Tdata(); // konstruktor domyślny
     Tdata(int dzien, int miesiac, int rok) : d(dzien), m(miesiac), r(rok){}; // konstruktor z listą inicjalizacyjną
     void wczytaj();
     void wyswietl();
