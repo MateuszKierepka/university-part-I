@@ -12,6 +12,10 @@ Tosoba2::Tosoba2(string nazwisko, string imie, Tdata d){
     motto = "cokolwiek";
 }
 
+Tosoba2::~Tosoba2() {
+    //destruktor
+}
+
 void Tosoba2::wczytaj() {
     cout<<"Podaj imie i nazwisko :\n"; cin>>imie>>nazwisko;
     cout<<"Podaj motto :\n"; cin>>motto;
@@ -33,8 +37,8 @@ int Tosoba2::roznicaWieku(Tosoba2 &partner){
 }
 
 Tosoba2 Tosoba2::dluzszeNazwisko(Tosoba2 &partner){
-    if(nazwisko.length() > partner.nazwisko.length()){
-    return Tosoba2();}
+    if(this->nazwisko.length() > partner.nazwisko.length()){
+     return *this;}
     else{
         return partner;
     }

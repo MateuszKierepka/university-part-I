@@ -13,6 +13,7 @@ public:
     Tdata dataUr;
     Tosoba2(); // kontruktor domyślny
     Tosoba2(string nazwisko, string imie, Tdata d); // motto zdefiniowane wewnątrz konstruktora
+    ~Tosoba2();
     void wczytaj();
     void wyswietl();
     string getNazwiskoImie();
