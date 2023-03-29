@@ -1,14 +1,29 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <cstdio>
 
 using namespace std;
-
 struct  student{
     string imie;
     string nazwisko;
     int l_p;
 };
+
+void przydzielPamiec1D(student *&tab, int n){
+    tab = new student[n];
+}
+
+void usunTablice1D(student *&tab){
+    delete []tab;
+}
+
+void wyswietl1D(int* tab, int n){
+    for(int i=0; i<n; i++){
+        cout<<tab[i]<<" ";
+    }
+    cout<<endl;
+}
 
 void quickSort(int tab[],int l,int p, int tryb){
     int srodek =(int)(l+p)/2;
@@ -28,7 +43,7 @@ void quickSort(int tab[],int l,int p, int tryb){
             granica++;
         }
         i++;
-    }
+        }
     tab[p]=tab[granica];
     tab[granica]=piwot;
     if(l<granica-1){
@@ -88,7 +103,7 @@ int main() {
     ifstream plik;
     char sredniki;
     student* tab;
-    sciezka="C:\\Users\\Mateusz\\Desktop\\lab03\\studenci.csv";
+    sciezka="C:\\Users\\Mateusz\\Desktop\\jebacbarce\\studenci.csv";
 
     plik.open(sciezka);
     plik >> liczbaStudentow;
@@ -102,7 +117,7 @@ int main() {
         getline(ss,tab[i].imie,';');
         getline(ss, tab[i].nazwisko, ';');
         getline(ss, pomoc);
-        tab[i].l_p=stoi(pomoc.c_str());
+        tab[i].l_p=atoi(pomoc.c_str());
     }
     plik.close();
     sortowanieQuickSort(tab,0,liczbaStudentow-1,1);
