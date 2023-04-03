@@ -26,11 +26,11 @@ void wyswietlStudentow(student* tab, int n){
 }
 
 void wyswietlStudentowP(student* tab, int n, int p){
-    cout<<"Studenci, ktorzy otrzymali <=10 punktów: "<<endl;
+    cout<<"Studenci, ktorzy otrzymali <=10 punktow: "<<endl;
     for(int i=0; i<p; i++){
         cout<<tab[i].imie<<" "<<tab[i].nazwisko<<" "<<tab[i].l_p<<endl;
     }
-    cout<<"Studenci, ktorzy otrzymali >10 punktów:"<<endl;
+    cout<<"Studenci, ktorzy otrzymali >10 punktow:"<<endl;
     for(int i=p; i<n; i++){
         cout<<tab[i].imie<<" "<<tab[i].nazwisko<<" "<<tab[i].l_p<<endl;
     }
