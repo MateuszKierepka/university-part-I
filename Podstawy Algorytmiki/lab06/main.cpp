@@ -1,79 +1,71 @@
 #include <iostream>
-#include <string>
-#include <math.h>
+#include <cmath>
 #include <fstream>
-#include <sstream>
-#include <cstdlib>
 
 using namespace std;
 
-int make_hash(char s, int off, int p, int exp){
-    int hash=((int)s-off)*pow(p,exp);
-
+int make_hash(char s, int off,int p, int exp){
+    int hash = (((int)s) - off)*pow(p,exp);
     return hash;
 }
 
-int update_hash(int hash, char s_prev, char s_next, int off, int p, int exp){
-    int u_hash = hash-((int)s_prev-off)*pow(p,exp);
-    u_hash*=p;
-    u_hash+=((int)s_next-off);
-
+int update_hash(int hash, char s_prev, char s_next, int off,int p, int exp){
+    int u_hash=hash - ((int)s_prev-off)*pow(p,exp);
+    u_hash = u_hash*p;
+    u_hash = u_hash +((int)s_next-off);
     return u_hash;
 }
 
-bool kr(string pattern, string tekst,int p, int off){
-    bool result= false;
+void kr(string pattern, string text, int p, int off){
+    bool spr= true;
+    int lenP = pattern.length();
+    int lenT = text.length();
     int hashP=0;
-    int hashT=0;
-    int i=0;
-    while(i<pattern.length()){
-        hashP=hashP+make_hash(pattern[i],off,p,pattern.length()-i-1);
-        hashT=hashT+make_hash(tekst[i],off,p, pattern.length()-i-1);
-        i++;
+    int hashT = 0;
+    for(int i=0; i<lenP; i++){
+        hashP = hashP+ make_hash(pattern[i], off, p,lenP-i-1);
+        hashT = hashT+ make_hash(text[i], off, p,lenP-i-1);
     }
-    i=pattern.length();
-    int j=0;
-
-    while(i<=tekst.length()){
-        if(hashP==hashT){
+    for(int j=0, i=lenP; i<=lenT; i++, j++){
+        if(hashP == hashT){
             int k=0;
-            while(k<pattern.length() && pattern[k]==tekst[j+k]) k++;
-            if(k==pattern.length()){
+            while(k < lenP && pattern[k] == text[j+k]){
+                k++;
+            }
+            if(k == lenP){
                 cout<<j<<" ";
-                result= true;
+                spr=false;
             }
         }
-        if(i<tekst.length()){
-            hashT= update_hash(hashT,tekst[j],tekst[i],off,p,pattern.length()-1);
+        if(i < lenT){
+            hashT = update_hash(hashT,text[j],text[i], off, p,lenP-1);
         }
-        i++;
-        j++;
     }
-    return result;
+    if(spr){
+        cout<<"-1";
+    }
 }
 
 int main() {
-    string wzorzec, tekst;
-    int alfabet, podstawa;
-
-    cout<<"Podaj wzorzec: "<<endl;
-    getline(cin, wzorzec);
-    cout<<"Podaj alfabet: "<<endl;
-    cin>>alfabet;
-    cout<<"Podaj podstawe: "<<endl;
-    cin>>podstawa;
-
-    string sciezka,linia,pomoc;
-    fstream plik;
-    plik.open("tekst.txt");
-    while(getline(plik,linia)){
-        if(kr(wzorzec,linia,podstawa,alfabet)){
+    string sciezka, linia, wz;
+    ifstream plik;
+    sciezka="C:\\Users\\Mateusz\\Desktop\\Studia\\SEMESTR-II\\university-part-I\\Podstawy Algorytmiki\\lab06\\tekst.txt";
+    plik.open(sciezka);
+    if(plik.is_open()){
+        plik >> wz;
+        cout<<"Wzorzec : "<<wz<<endl;
+        int i=2; //w pierwszej linii znajduje sie wzorzec
+        while (!plik.eof()){//flaga ktora mowi ze napotkano koniec pliku
+            plik >> linia;
+            cout<<"Linijka nr "<<i<<" : ";
+            kr(wz,linia,2,0);
+            i++;
             cout<<endl;
         }
-        else{
-            cout<<-1<<endl;
-        }
+        plik.close();
     }
-    plik.close();
+    else {
+        cout << "Nie mozna otworzyc pliku...";
+    }
     return 0;
 }
