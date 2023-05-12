@@ -13,7 +13,7 @@ Tdomownik::Tdomownik() {
 Tdomownik::Tdomownik(std::string nazwa) {
     this->nazwa=nazwa;
     ::fflush(stdin);
-    cout<<"Podaj sekret : "<<endl;
+    cout<<nazwa<<", podaj sekret : "<<endl;
     getline(cin, sekret);
 }
 
@@ -37,6 +37,10 @@ void Tdomownik::wyswietl() {
 
 Tsasiad::Tsasiad() {
 //konstruktor
+}
+
+Tsasiad::Tsasiad(string nazwa) {
+    this->nazwa=nazwa;
 }
 
 Tsasiad::~Tsasiad() {

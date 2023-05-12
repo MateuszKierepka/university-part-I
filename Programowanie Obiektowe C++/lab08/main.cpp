@@ -11,12 +11,12 @@ string sasiad(Tdomownik *wsk){
 }
 
 int main() {
-    Tdomownik ojciec("ojciec");
-    Tdomownik matka("matka");
-    Tdomownik corka("corka");
+    Tdomownik ojciec("Ojciec");
+    Tdomownik matka("Matka");
+    Tdomownik corka("Corka");
     Tdomownik::setkod();
 
-    Tsasiad s;
+    Tsasiad s("Marian");
     s.info(&ojciec);
     s.info(&matka);
     s.info(&corka);

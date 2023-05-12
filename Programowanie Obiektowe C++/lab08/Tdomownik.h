@@ -28,6 +28,7 @@ class Tsasiad {
 
 public:
     Tsasiad();
+    Tsasiad(string nazwa);
     ~Tsasiad();
 
     void info(Tdomownik* domownik);
