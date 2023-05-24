@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <fstream>
-
+#include <cstdlib>
+#include <ctime>
 
 using namespace std;
 
@@ -76,6 +77,22 @@ void wczytaj(queue& q) {
     plik.close();
 }
 
+void losowanie(queue* queue){
+    char random = 'A' + rand() % 26;
+    element* el = new element;
+    el->character=random;
+    cout<<"Losowanie elementu... "<<el->character<<"!!"<<endl;
+    el->next= nullptr;
+    if(isEmpty(*queue)){
+        queue->head = el;
+        queue->tail = el;
+    }
+    else{
+        queue->tail->next = el;
+        queue->tail = el;
+    }
+}
+
 int main(){
     queue q;
     q.head = nullptr;
@@ -88,7 +105,7 @@ int main(){
         cout << "Wybierz program : " << endl;
         cout << "1 - Sprawdzenie czy kolejka jest pusta" << endl;
         cout << "2 - Wyswietlenie kolejki" << endl;
-        cout << "3 - Dodanie elementu do kolejki" << endl;
+        cout << "3 - Dodanie losowego elementu do kolejki" << endl;
         cout << "4 - Usuniecie elementu z kolejki" << endl;
         cout << "5 - Wyswietl pierwszy znak z kolejki" << endl;
         cout << "6 - Usuniecie wszystkich elementow z kolejki" << endl;
@@ -111,19 +128,13 @@ int main(){
             break;
         }
         case 3: {
-            cout << "Ile elementow chcesz dodac?" << endl; cin >> n;
-            for (int i = 0; i < n; i++) {
-                cout << "Podaj znak : " << endl; cin >> temp;
-                push(q, temp);
-            }
+            srand(time(NULL));
+            losowanie(&q);
             break;
         }
         case 4: {
             if (!isEmpty(q)) {
-                cout << "Ile elementow chcesz usunac?" << endl; cin >> n;
-                for (int i = 0; i < n; i++) {
                     pop(q);
-                }
             }
             break;
         }
@@ -156,4 +167,5 @@ int main(){
             break;
         }
     }
+    return 0;
 }
