@@ -141,6 +141,7 @@ void max(single_list list) {
         if (max < temp->number) {
             max = temp->number;
             position = i+1;
+            temp = temp->next;
         }
         else {
             temp = temp->next;
