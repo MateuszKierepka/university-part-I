@@ -1,311 +1,334 @@
 ﻿#include <iostream>
 #include <cstdlib>
-#include <ctime>
-#include <locale>
 
 using namespace std;
 
 struct element {
-	int number;
-	element* next;
+    int number;
+    element* next;
 };
 
 struct single_list {
-	element* head;
-	element* tail;
-	int counter;
+    element* head;
+    element* tail;
+    int counter;
 };
 
-bool isEmpty(single_list lista) {
-	if (lista.tail == nullptr && lista.head == nullptr) {
-		return true;
-	}
-	else {
-		return false;
-	}
+
+bool isEmpty(single_list list) {
+    return (list.tail == nullptr && list.head == nullptr);
 }
 
-void add_tail(single_list& lista, int value) {
-	element* el = new element;
-	el->number = value;
-	el->next = nullptr;
-	if (lista.tail != nullptr) {
-		lista.tail->next = el;
-	}
-	else {
-		lista.head = lista.tail;
-	}
-	lista.tail = el;
+void add_tail(single_list& list, int value) {
+    element* el = new element;
+    el->number = value;
+    el->next = list.head;
+    if (list.tail != nullptr) {
+        list.tail->next = el;
+    }
+    else {
+        list.head = el;
+    }
+    list.tail = el;
+    list.counter++;
 }
 
-void add_head(single_list& lista, int value) {
-	element* el = new element;
-	el->number = value;
-	el->next = lista.head;
-	lista.head = el;
-	if (lista.tail == nullptr) {
-		lista.tail = el;
-	}
+void add_head(single_list& list, int value) {
+    element* el = new element;
+    el->number = value;
+    el->next = list.head;
+    list.head = el;
+    if (list.tail == nullptr) {
+        list.tail = el;
+    }
+    list.counter++;
 }
 
-void add_position(single_list& lista, int value, int position) {
-	element* el = new element;
-	el->number = value;
-	element* temp = lista.head;
-	int i = 1;
-	while (i < position - 1) {
-		temp = temp->next;
-		i++;
-	}
-	el->next = temp->next;
-	temp->next = el;
+void add_position(single_list& list, int value, int position) {
+    element* el = new element;
+    el->number = value;
+    element* temp = list.head;
+    if (position <= 1) {
+        add_head(list, value);
+        return;
+    }
+    if (position > list.counter) {
+        add_tail(list, value);
+        return;
+    }
+    for (int i = 1; i < position - 1; i++) {
+        temp = temp->next;
+    }
+    el->next = temp->next;
+    temp->next = el;
+    list.counter++;
 }
 
-void delete_tail(single_list& lista) {
-	lista.counter--;
-	element* temp = lista.tail;
-	if (lista.counter == 1) {
-		lista.tail = nullptr;
-		lista.head = nullptr;
-	}
-	else {
-		element* bef_temp = lista.head;
-		for (int i = 1; i < lista.counter - 1; i++) {
-			lista.tail = bef_temp;
-			lista.tail->next = nullptr;
-		}
-	}
-	delete temp;
+void delete_tail(single_list& list) {
+    element* temp = list.tail;
+    if (list.counter == 1) {
+        list.tail = nullptr;
+        list.head = nullptr;
+    }
+    else {
+        element* bef_temp = list.head;
+        for (int i = 1; i < list.counter - 1; i++) {
+            bef_temp = bef_temp->next;
+        }
+        list.tail = bef_temp;
+        list.tail->next = nullptr;
+    }
+    delete temp;
+    list.counter--;
 }
 
-void delete_head(single_list& lista) {
-	lista.counter--;
-	element* temp = lista.head;
-	lista.head = lista.head->next;
-	if (lista.counter == 1) {
-		lista.tail = nullptr;
-	}
-	delete temp;
+void delete_head(single_list& list) {
+    element* temp = list.head;
+    list.head = list.head->next;
+    if (list.counter == 1) {
+        list.tail = nullptr;
+    }
+    delete temp;
+    list.counter--;
 }
 
-void delete_position(single_list& lista, int position) {
-	lista.counter--;
-	element* prev = lista.head;
-	for (int i = 1; i < position - 1; i++) {
-		prev = prev->next;
-	}
-	
+void delete_position(single_list& list, int position) {
+    if (position < 1 || position > list.counter) {
+        cout << "Nieprawidlowa pozycja!" << endl;
+        return;
+    }
+    if (position == 1) {
+        delete_head(list);
+        return;
+    }
+    if (position == list.counter) {
+        delete_tail(list);
+        return;
+    }
+    element* prev = list.head;
+    for (int i = 1; i < position - 1; i++) {
+        prev = prev->next;
+    }
+    element* temp = prev->next;
+    prev->next = temp->next;
+    delete temp;
+    list.counter--;
 }
 
-bool isEmpty_Element(element el) {
-	if (el.next == nullptr) {
-		return true;
-	}
-	else {
-		return false;
-	}
+void show(single_list list) {
+    element* temp = list.head;
+    for (int i = 0; i < list.counter; i++) {
+        cout <<"Element "<< i+1 <<" : " << temp->number << endl;
+        temp = temp->next;
+    }
 }
 
-float sredniaArytmetyczna(single_list& lista) {
-	float srednia = 0;
-	element* temp = lista.head;
-	for (int i = 0; i < lista.counter - 1; i++) {
-		srednia += temp->number;
-		if (!isEmpty_Element(*temp)) {
-			temp = temp->next;
-		}
-	}
-	return srednia / (lista.counter - 1);
+float srednia_arytmetyczna(single_list list) {
+    float srednia = 0;
+    element* temp = list.head;
+    for (int i = 0; i < list.counter; i++) {
+        srednia += temp->number;
+        temp = temp->next;
+    }
+    return srednia / list.counter;
 }
 
-int maksymalny(single_list& lista) {
-	int max = 0;
-	element* temp = lista.head;
-	for (int i = 1; i < lista.counter - 1; i++) {
-		if (max < temp->number) {
-			max = temp->number;
-		}
-		if (!isEmpty_Element(*temp)) {
-			temp = temp->next;
-		}
-	}
-	return max;
+void max(single_list list) {
+    int max = 0;
+    int position;
+    element* temp = list.head;
+    for (int i = 0; i < list.counter; i++) {
+        if (max < temp->number) {
+            max = temp->number;
+            position = i+1;
+        }
+        else {
+            temp = temp->next;
+        }
+    }
+
+    cout << "Najwieksza liczba to " << max << " ktora jest " << position << " elementem!" << endl;
 }
 
-void show(single_list lista) {
-	element* temp = lista.head;
-	cout << "Lista jednokierunkowa : " << endl;
-	for (int i = 1; i < lista.counter - 1; i++) {
-		cout << i << " - " << temp->number << endl;
-		if (!isEmpty_Element(*temp)) {
-			temp = temp->next;
-		}
-	}
+int gen_liczb() {
+    int a = 1;
+    int b = 50;
+    return rand() % (b - a + 1) + a;
 }
 
-int main(){
-	setlocale(LC_ALL, "");
-	single_list lista;
-	lista.head = nullptr;
-	lista.tail = nullptr;
-	lista.counter = 1;
+int main() {
+    single_list list;
+    list.head = nullptr;
+    list.tail = nullptr;
+    list.counter = 0;
+    int choice = 0, value, position;
 
-	int wybor = 0, value, position=0;
+    while (choice != 14) {
+        cout << "Wybierz funkcje :" << endl;
+        cout << "1 - Sprawdzenie czy lista jest pusta" << endl;
+        cout << "2 - Dodanie elementu na koniec listy" << endl;
+        cout << "3 - Dodanie elementu na poczatek listy" << endl;
+        cout << "4 - Dodanie elementu na okreslona pozycje" << endl;
+        cout << "5 - Usuniecie elementu z konca listy" << endl;
+        cout << "6 - Usuniecie elementu z poczatku listy" << endl;
+        cout << "7 - Usuniecie elementu znajdujacego sie na okreslonej pozycji" << endl;
+        cout << "8 - Pobranie pierwszego elementu z listy" << endl;
+        cout << "9 - Pobranie ostatniego elementu z listy" << endl;
+        cout << "10 - Policzenie sredniej arytmetycznej elementow w liscie" << endl;
+        cout << "11 - Znalezienie elementu maksymalnego w liscie" << endl;
+        cout << "12 - Wyswietlenie calej listy" << endl;
+        cout << "13 - Usuniecie calej listy wraz ze zwolnieniem pamieci" << endl;
+        cout << "14 - Wyjscie z programu" << endl;
+        cin >> choice;
+        system("cls");
 
-	while (wybor != 14) {
-		cout << "Wybierz funkcję :" << endl;
-		cout << "1 - Sprawdzenie czy lista jest pusta" << endl;
-		cout << "2 - Dodanie elementu na koniec listy" << endl;
-		cout << "3 - Dodanie elementu na początek listy" << endl;
-		cout << "4 - Dodanie elementu na określoną pozycję" << endl;
-		cout << "5 - Usunięcie elementu z końca listy" << endl;
-		cout << "6 - Usunięcie elementu z początku listy" << endl;
-		cout << "7 - Usunięcie elementu znajdującego się na określonej pozycji" << endl;
-		cout << "8 - Pobranie pierwszego elementu z listy" << endl;
-		cout << "9 - Pobranie ostatniego elementu z listy" << endl;
-		cout << "10 - Policzenie średniej arytmetycznej elementów w liście" << endl;
-		cout << "11 - Znalezienie elementu maksymalnego w liście" << endl;
-		cout << "12 - Wyświetlenie całej listy" << endl;
-		cout << "13 - Usunięcie całej listy wraz ze zwolnieniem pamięci" << endl;
-		cout << "14 - Wyjście z programu" << endl;
-		cin >> wybor;
+        switch (choice) {
+        case 1:
+            if (isEmpty(list)) {
+                cout << "Lista jest pusta!" << endl;
+            }
+            else {
+                cout << "Lista ma " << list.counter << " elementow!" << endl;
+            }
+            cout << endl;
+            break;
 
-		switch (wybor) {
-		case 1:
-			if (isEmpty(lista)) {
-				cout << "Lista jest pusta!" << endl;
-			}
-			else {
-				cout << "Lista ma " << lista.counter - 1 << " elementów" << endl;
-			}
-			cout << endl;
-			break;
-		case 2:
-			srand(time(NULL));
-			value = rand() % 49 + 1;
-			cout << "Wylosowana liczba : " << value << endl;
-			add_tail(lista, value);
-			cout << endl;
-			break;
-		case 3:
-			srand(time(NULL));
-			value = rand() % 49 + 1;
-			cout << "Wylosowana liczba : " << value << endl;
-			add_head(lista, value);
-			cout << endl;
-			break;
-		case 4:
-			srand(time(NULL));
-			value = rand() % 49 + 1;
-			cout << "Wylosowana liczba : " << value << endl;
-			while (position <= 0) {
-				cout << "Na którą pozycję chcesz dodać element?" << endl;
-				cin >> position;
-			}
-			add_position(lista, value, position);
-			cout << endl;
-			break;
-		case 5:
-			if (isEmpty(lista)) {
-				cout << "Lista jest pusta!" << endl;
-			}
-			else {
-				delete_tail(lista);
-				cout << "Usunięto końcowy element z listy" << endl;
-			}
-			cout << endl;
-			break;
-		case 6:
-			if (isEmpty(lista)) {
-				cout << "Lista jest pusta!" << endl;
-			}
-			else {
-				delete_head(lista);
-				cout << "Usunięto początkowy element z listy" << endl;
-			}
-			cout << endl;
-			break;
-		case 7:
-			if (isEmpty(lista)) {
-				cout << "Lista jest pusta!" << endl;
-			}
-			else {
-				while (position <= 0) {
-					cout << "Z której pozycji chcesz usunąć element?" << endl;
-					cin >> position;
-				}
-				delete_position(lista, position);
-				cout << "Usunięto element z listy o indeksie " << position << endl;
-			}
-			cout << endl;
-			break;
-		case 8:
-			if (isEmpty(lista)) {
-				cout << "Lista jest pusta!" << endl;
-			}
-			else {
-				cout << "Pierwszy element listy : " << lista.head->number << endl;
-			}
-			cout << endl;
-			break;
-		case 9:
-			if (isEmpty(lista)) {
-				cout << "Lista jest pusta!" << endl;
-			}
-			else {
-				cout << "Ostatni element listy : " << lista.tail->number << endl;
-			}
-			cout << endl;
-			break;
-		case 10:
-			if (isEmpty(lista)) {
-				cout << "Lista jest pusta!" << endl;
-			}
-			else {
-				cout << "Średnia arytmetyczna elementów listy wynosi : " << sredniaArytmetyczna(lista) << endl;
-			}
-			cout << endl;
-			break;
-		case 11:
-			if (isEmpty(lista)){
-				cout << "Lista jest pusta!" << endl;
-			}
-			else {
-				cout << "Element maksymalny w liście wynosi : " << maksymalny(lista) << endl;
-			}
-			cout << endl;
-			break;
-		case 12:
-			if (isEmpty(lista)) {
-				cout << "Lista jest pusta!" << endl;
-			}
-			else {
-				show(lista);
-			}
-			cout << endl;
-			break;
-		case 13:
-			if (isEmpty(lista)) {
-				cout << "Lista jest pusta!" << endl;
-			}
-			else {
-				while (!isEmpty(lista)) {
-					delete_tail(lista);
-				}
-				cout << "Wszystkie elementy zostały usunięte!" << endl;
-			}
-			cout << endl;
-			break;
-		case 14:
-			system("PAUSE");
-			return EXIT_SUCCESS;
-		default:
-			cout << "Błąd danych!" << endl;
-			wybor = 14;
-			break;
-		}
-	}
+        case 2:
+            value = gen_liczb();
+            add_tail(list, value);
+            cout << "Liczba " << value << " zostala dodana na koniec listy!" << endl;
+            show(list);
+            cout << endl;
+            break;
 
-	system("PAUSE");
-	return EXIT_SUCCESS;
+        case 3:
+            value = gen_liczb();
+            add_head(list, value);
+            cout << "Liczba " << value << " zostala dodana na poczatek listy!" << endl;
+            show(list);
+            cout << endl;
+            break;
+
+        case 4:
+            value = gen_liczb();
+            cout << "Podaj pozycje : " << endl; 
+            cin >> position;
+            add_position(list, value, position);
+            cout << "Liczba " << value << " zostala dodana na pozycje " << position << "!" << endl;
+            show(list);
+            cout << endl;
+            break;
+
+        case 5:
+            if (isEmpty(list)) {
+                cout << "Lista jest pusta!" << endl;
+            }
+            else {
+                delete_tail(list);
+                cout << "Usunieto koncowy element z listy!" << endl;
+            }
+            show(list);
+            cout << endl;
+            break;
+
+        case 6:
+            if (isEmpty(list)) {
+                cout << "Lista jest pusta!" << endl;
+            }
+            else {
+                delete_head(list);
+                cout << "Usunieto poczatkowy element z listy!" << endl;
+            }
+            show(list);
+            cout << endl;
+            break;
+
+        case 7:
+            if (isEmpty(list)) {
+                cout << "Lista jest pusta!" << endl;
+            }
+            else {
+                cout << "Podaj pozycje od 1 do " << list.counter << ": " << endl;
+                cin >> position;
+                delete_position(list, position);
+                cout << "Usunieto element z " << position << " pozycji!" << endl;
+                show(list);
+            }
+            cout << endl;
+            break;
+
+        case 8:
+            if (isEmpty(list)) {
+                cout << "Lista jest pusta!" << endl;
+            }
+            else {
+                cout << "Pierwszy element listy wynosi : " << list.head->number << endl;
+            }
+            cout << endl;
+            break;
+
+        case 9:
+            if (isEmpty(list)) {
+                cout << "Lista jest pusta!" << endl;
+            }
+            else {
+                cout << "Ostatni element listy wynosi : " << list.tail->number << endl;
+            }
+            cout << endl;
+            break;
+
+        case 10:
+            if (isEmpty(list)) {
+                cout << "Lista jest pusta!" << endl;
+            }
+            else {
+                cout << "Srednia arytmetyczna elementow wynosi : " << srednia_arytmetyczna(list);
+            }
+            cout << endl;
+            break;
+
+        case 11:
+            if (isEmpty(list)) {
+                cout << "Lista jest pusta!" << endl;
+            }
+            else {
+                max(list);
+            }
+            cout << endl;
+            break;
+
+        case 12:
+            if (isEmpty(list)) {
+                cout << "Lista jest pusta!" << endl;
+            }
+            else {
+                show(list);
+            }
+            cout << endl;
+            break;
+
+        case 13:
+            if (isEmpty(list)) {
+                cout << "Lista jest pusta!" << endl;
+           }
+            else {
+                while (!isEmpty(list)) {
+                    delete_tail(list);
+                }
+                cout << "Usunieto wszystkie elementy!" << endl;
+            }
+            cout << endl;
+            break;
+
+        case 14:
+            system("pause");
+            return EXIT_SUCCESS;
+
+        default:
+            cout << "Blad danych!" << endl;
+            break;
+        }
+    }
+    system("pause");
+    return EXIT_SUCCESS;
 }
