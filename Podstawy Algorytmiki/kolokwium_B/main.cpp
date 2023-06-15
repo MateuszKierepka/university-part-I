@@ -53,7 +53,7 @@ int function(jednokierunkowaCykliczna* biezacy, int* czypusta){
     int max = biezacy->number;
     jednokierunkowaCykliczna* temp = biezacy->next;
 
-    while (temp != nullptr){
+    while (temp != biezacy){
         if (temp->number > max){
             max = temp->number;
         }
