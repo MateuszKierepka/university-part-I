@@ -59,7 +59,7 @@ int function(dwukierunkowaCykliczna* biezacy, int* czypusta) {
     int min = biezacy->number;
     dwukierunkowaCykliczna* temp = biezacy->next;
 
-    while (temp != nullptr) {
+    while (temp != biezacy) {
         if (temp->number < min) {
             min = temp->number;
         }
